@@ -7,7 +7,7 @@ import { auth } from '@/firebase';
 import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils.ts"
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -13,7 +13,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils.ts"
 
 interface BookingModalProps {
   room: {
