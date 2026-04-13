@@ -1,6 +1,6 @@
 import Hero from '@/components/home/Hero';
 import FeaturedRooms from '@/components/home/FeaturedRooms';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { useTranslation } from 'react-i18next';
 
 export default function Home() {

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, LogOut, Shield, Globe } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 import { auth } from '@/firebase';
 import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -97,11 +98,9 @@ export default function Navbar({ onToggleAdmin, isAdminView }: NavbarProps) {
 
           {/* Language Switcher */}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-luxury-black/70 hover:text-gold">
-                <Globe className="w-4 h-4 mr-2" />
-                <span className="uppercase">{i18n.language.split('-')[0]}</span>
-              </Button>
+            <DropdownMenuTrigger className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "text-luxury-black/70 hover:text-gold cursor-pointer")}>
+              <Globe className="w-4 h-4 mr-2" />
+              <span className="uppercase">{i18n.language.split('-')[0]}</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white border-gold/10">
               <DropdownMenuItem onClick={() => changeLanguage('en')} className="cursor-pointer hover:bg-luxury-cream">
@@ -144,10 +143,8 @@ export default function Navbar({ onToggleAdmin, isAdminView }: NavbarProps) {
         {/* Mobile Toggle */}
         <div className="flex items-center gap-4 md:hidden">
            <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-luxury-black/70">
-                <Globe className="w-5 h-5" />
-              </Button>
+            <DropdownMenuTrigger className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "text-luxury-black/70 cursor-pointer")}>
+              <Globe className="w-5 h-5" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white">
               <DropdownMenuItem onClick={() => changeLanguage('en')}>English</DropdownMenuItem>

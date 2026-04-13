@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FEATURED_ROOMS } from '@/components/home/FeaturedRooms';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { Star, Users, Maximize, ArrowLeft, Check, Wifi, Coffee, Tv, Wind } from 'lucide-react';
 import { useState } from 'react';
 import BookingModal from '@/components/booking/BookingModal';

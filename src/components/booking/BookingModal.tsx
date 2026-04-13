@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, Users, CreditCard, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -13,6 +13,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 
 interface BookingModalProps {
   room: {
@@ -129,24 +130,24 @@ export default function BookingModal({ room, isOpen, onClose }: BookingModalProp
                 <div className="space-y-2 md:col-span-2">
                   <Label className="text-xs uppercase tracking-widest font-bold">{t('booking.selectDates')}</Label>
                   <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={`w-full justify-start text-left font-normal border-gold/20 h-12 rounded-xl ${!date.from && "text-muted-foreground"}`}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4 text-gold" />
-                        {date.from ? (
-                          date.to ? (
-                            <>
-                              {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                            </>
-                          ) : (
-                            format(date.from, "LLL dd, y")
-                          )
+                    <PopoverTrigger 
+                      className={cn(
+                        buttonVariants({ variant: "outline" }),
+                        `w-full justify-start text-left font-normal border-gold/20 h-12 rounded-xl cursor-pointer ${!date.from && "text-muted-foreground"}`
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4 text-gold" />
+                      {date.from ? (
+                        date.to ? (
+                          <>
+                            {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                          </>
                         ) : (
-                          <span>{t('booking.checkIn')} - {t('booking.checkOut')}</span>
-                        )}
-                      </Button>
+                          format(date.from, "LLL dd, y")
+                        )
+                      ) : (
+                        <span>{t('booking.checkIn')} - {t('booking.checkOut')}</span>
+                      )}
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar

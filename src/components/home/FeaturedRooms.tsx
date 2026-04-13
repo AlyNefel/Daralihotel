@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { Star, Users, Maximize, Info } from 'lucide-react';
 import BookingModal from '../booking/BookingModal';
 import { useTranslation } from 'react-i18next';

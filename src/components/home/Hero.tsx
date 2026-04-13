@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { ArrowRight, Play, Calendar as CalendarIcon, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
@@ -84,11 +84,9 @@ export default function Hero() {
           <div className="flex-1 px-6 py-3 border-b md:border-b-0 md:border-r border-gray-100">
             <label className="block text-[10px] uppercase tracking-widest font-bold text-luxury-black/40 mb-1">{t('search.checkIn')}</label>
             <Popover>
-              <PopoverTrigger asChild>
-                <button className="flex items-center gap-2 text-luxury-black font-medium w-full text-left">
-                  <CalendarIcon className="w-4 h-4 text-gold" />
-                  {checkIn ? format(checkIn, 'MMM dd, yyyy') : t('search.checkIn')}
-                </button>
+              <PopoverTrigger className="flex items-center gap-2 text-luxury-black font-medium w-full text-left cursor-pointer">
+                <CalendarIcon className="w-4 h-4 text-gold" />
+                {checkIn ? format(checkIn, 'MMM dd, yyyy') : t('search.checkIn')}
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 bg-white">
                 <Calendar mode="single" selected={checkIn} onSelect={setCheckIn} disabled={(date) => date < new Date()} />
@@ -100,11 +98,9 @@ export default function Hero() {
           <div className="flex-1 px-6 py-3 border-b md:border-b-0 md:border-r border-gray-100">
             <label className="block text-[10px] uppercase tracking-widest font-bold text-luxury-black/40 mb-1">{t('search.checkOut')}</label>
             <Popover>
-              <PopoverTrigger asChild>
-                <button className="flex items-center gap-2 text-luxury-black font-medium w-full text-left">
-                  <CalendarIcon className="w-4 h-4 text-gold" />
-                  {checkOut ? format(checkOut, 'MMM dd, yyyy') : t('search.checkOut')}
-                </button>
+              <PopoverTrigger className="flex items-center gap-2 text-luxury-black font-medium w-full text-left cursor-pointer">
+                <CalendarIcon className="w-4 h-4 text-gold" />
+                {checkOut ? format(checkOut, 'MMM dd, yyyy') : t('search.checkOut')}
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 bg-white">
                 <Calendar mode="single" selected={checkOut} onSelect={setCheckOut} disabled={(date) => date < (checkIn || new Date())} />
