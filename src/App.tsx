@@ -21,16 +21,13 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-luxury-cream">
-      <Navbar onToggleAdmin={() => setIsAdminView(!isAdminView)} isAdminView={isAdminView} />
+      <Navbar />
       <main>
-        {isAdmin && isAdminView ? (
-          <AdminDashboard />
-        ) : (
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/room/:id" element={<RoomDetails />} />
-          </Routes>
-        )}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/room/:id" element={<RoomDetails />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Routes>
       </main>
       
       <footer className="bg-luxury-black text-white/40 py-12 border-t border-white/5">

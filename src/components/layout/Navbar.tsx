@@ -15,15 +15,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
 
-interface NavbarProps {
-  onToggleAdmin?: () => void;
-  isAdminView?: boolean;
-}
-
-export default function Navbar({ onToggleAdmin, isAdminView }: NavbarProps) {
+export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
   const { t, i18n } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
@@ -62,6 +57,7 @@ export default function Navbar({ onToggleAdmin, isAdminView }: NavbarProps) {
     { label: t('nav.rooms'), href: '#rooms' },
     { label: t('nav.about'), href: '#about' },
     { label: t('nav.contact'), href: '#contact' },
+    { label: 'Admin', href: '/admin', isRoute: true },
   ];
 
   return (
@@ -84,14 +80,24 @@ export default function Navbar({ onToggleAdmin, isAdminView }: NavbarProps) {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
-            <a 
-              key={item.label} 
-              href={item.href}
-              onClick={(e) => handleNavClick(e, item.href)}
-              className="text-sm font-medium uppercase tracking-widest text-luxury-black/70 hover:text-gold transition-colors"
-            >
-              {item.label}
-            </a>
+            item.isRoute ? (
+              <Link
+                key={item.label}
+                to={item.href}
+                className="text-sm font-medium uppercase tracking-widest text-luxury-black/70 hover:text-gold transition-colors"
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <a 
+                key={item.label} 
+                href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="text-sm font-medium uppercase tracking-widest text-luxury-black/70 hover:text-gold transition-colors"
+              >
+                {item.label}
+              </a>
+            )
           ))}
           
           <div className="h-4 w-[1px] bg-luxury-black/10 mx-2" />
@@ -117,17 +123,6 @@ export default function Navbar({ onToggleAdmin, isAdminView }: NavbarProps) {
 
           {user ? (
             <div className="flex items-center gap-4">
-              {isAdmin && (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={onToggleAdmin}
-                  className={`${isAdminView ? 'bg-gold/10 text-gold' : 'text-luxury-black/70'} hover:text-gold hover:bg-gold/10`}
-                >
-                  <Shield className="w-4 h-4 mr-2" />
-                  {isAdminView ? t('nav.exitAdmin') : t('nav.admin')}
-                </Button>
-              )}
               <Button variant="ghost" size="sm" onClick={logout} className="text-luxury-black/70">
                 <LogOut className="w-4 h-4 mr-2" />
                 {t('nav.logout')}
@@ -169,17 +164,28 @@ export default function Navbar({ onToggleAdmin, isAdminView }: NavbarProps) {
           >
             <div className="p-6 flex flex-col gap-4">
               {navItems.map((item) => (
-                <a 
-                  key={item.label} 
-                  href={item.href}
-                  onClick={(e) => {
-                    handleNavClick(e, item.href);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-lg font-serif text-luxury-black"
-                >
-                  {item.label}
-                </a>
+                item.isRoute ? (
+                  <Link
+                    key={item.label}
+                    to={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-lg font-serif text-luxury-black"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <a 
+                    key={item.label} 
+                    href={item.href}
+                    onClick={(e) => {
+                      handleNavClick(e, item.href);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="text-lg font-serif text-luxury-black"
+                  >
+                    {item.label}
+                  </a>
+                )
               ))}
               {!user && (
                 <Button onClick={login} className="bg-gold text-white rounded-full w-full">
