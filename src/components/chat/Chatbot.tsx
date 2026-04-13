@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/Input';
+import { Card } from '@/components/ui/Card';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");

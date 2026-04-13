@@ -3,10 +3,10 @@ import { Button } from '@/components/ui/Button';
 import { ArrowRight, Play, Calendar as CalendarIcon, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
+import { Calendar } from '@/components/ui/Calendar';
 import { format } from 'date-fns';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 
 export default function Hero() {
   const { t, i18n } = useTranslation();

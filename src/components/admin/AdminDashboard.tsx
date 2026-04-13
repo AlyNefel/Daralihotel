@@ -11,9 +11,9 @@ import {
   X,
   Clock
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
 import { db } from '@/firebase';
 import { collection, query, onSnapshot, orderBy, updateDoc, doc } from 'firebase/firestore';
 import { toast } from 'sonner';
