@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "Room": {
+      "title": "Room",
+      "description": "A hotel room available for booking",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Room name" },
+        "description": { "type": "string", "description": "Room description" },
+        "pricePerNight": { "type": "number", "description": "Price per night in TND" },
+        "type": { "type": "string", "enum": ["Single", "Double", "Suite", "Deluxe"], "description": "Room type" },
+        "capacity": { "type": "number", "description": "Maximum number of guests" },
+        "amenities": { "type": "array", "items": { "type": "string" }, "description": "List of amenities" },
+        "images": { "type": "array", "items": { "type": "string" }, "description": "URLs of room images" },
+        "isAvailable": { "type": "boolean", "description": "Whether the room is currently available" }
+      },
+      "required": ["name", "pricePerNight", "type", "capacity"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "A reservation for a room",
+      "type": "object",
+      "properties": {
+        "roomId": { "type": "string", "description": "Reference to the booked room" },
+        "userId": { "type": "string", "description": "Reference to the user who booked" },
+        "startDate": { "type": "string", "format": "date-time", "description": "Check-in date" },
+        "endDate": { "type": "string", "format": "date-time", "description": "Check-out date" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled"], "description": "Booking status" },
+        "totalPrice": { "type": "number", "description": "Total price for the stay" },
+        "guestName": { "type": "string", "description": "Name of the primary guest" },
+        "guestEmail": { "type": "string", "description": "Email of the primary guest" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the booking was created" }
+      },
+      "required": ["roomId", "userId", "startDate", "endDate", "totalPrice"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Application user profile",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "description": "User email" },
+        "displayName": { "type": "string", "description": "User display name" },
+        "role": { "type": "string", "enum": ["admin", "user"], "description": "User role" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the user joined" }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/rooms": {
+      "schema": "Room",
+      "description": "Collection of hotel rooms"
+    },
+    "/bookings": {
+      "schema": "Booking",
+      "description": "Collection of room reservations"
+    },
+    "/users": {
+      "schema": "User",
+      "description": "Collection of user profiles"
+    }
+  }
+}
