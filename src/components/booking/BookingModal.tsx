@@ -8,16 +8,15 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/Dialog';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
-import { db } from '@/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { cn } from "@/lib/utils.ts"
+import { useCurrency } from '@/context/CurrencyContext';
 
 interface BookingModalProps {
   room: {
-    id: string;
+    _id: string;
     name: string;
     price: number;
   } | null;
@@ -28,6 +27,7 @@ interface BookingModalProps {
 export default function BookingModal({ room, isOpen, onClose }: BookingModalProps) {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { formatPrice } = useCurrency();
   const [date, setDate] = useState<{ from: Date | undefined; to: Date | undefined }>({
     from: undefined,
     to: undefined
@@ -63,28 +63,32 @@ export default function BookingModal({ room, isOpen, onClose }: BookingModalProp
 
     setIsSubmitting(true);
     try {
-      await addDoc(collection(db, 'bookings'), {
-        roomId: room?.id,
-        roomName: room?.name,
-        userId: user?.uid || 'guest',
-        userEmail: guestInfo.email,
-        userName: `${guestInfo.firstName} ${guestInfo.lastName}`,
-        userPhone: guestInfo.phone,
-        startDate: date.from.toISOString(),
-        endDate: date.to.toISOString(),
-        totalPrice: calculateTotal(),
-        guests,
-        status: 'pending',
-        createdAt: serverTimestamp()
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          roomId: room?._id,
+          clientName: `${guestInfo.firstName} ${guestInfo.lastName}`,
+          clientEmail: guestInfo.email,
+          clientPhone: guestInfo.phone,
+          checkIn: date.from.toISOString(),
+          checkOut: date.to.toISOString(),
+          guests,
+          totalPrice: calculateTotal()
+        })
       });
-      
-      setIsSuccess(true);
-      toast.success(t('booking.successToast') || "Booking request sent successfully!");
-      setTimeout(() => {
-        onClose();
-        setIsSuccess(false);
-        setDate({ from: undefined, to: undefined });
-      }, 3000);
+
+      if (res.ok) {
+        setIsSuccess(true);
+        toast.success(t('booking.successToast') || "Booking request sent successfully!");
+        setTimeout(() => {
+          onClose();
+          setIsSuccess(false);
+          setDate({ from: undefined, to: undefined });
+        }, 3000);
+      } else {
+        throw new Error('Failed to create booking');
+      }
     } catch (error) {
       console.error("Booking error:", error);
       toast.error(t('booking.errorToast') || "Failed to process booking. Please try again.");
@@ -224,7 +228,7 @@ export default function BookingModal({ room, isOpen, onClose }: BookingModalProp
                   <div className="space-y-2">
                     <Label className="text-xs uppercase tracking-widest font-bold">{t('booking.totalPrice')}</Label>
                     <div className="h-12 flex items-center px-4 bg-luxury-black text-white rounded-xl font-bold">
-                      {calculateTotal()} {t('rooms.tnd')}
+                      {formatPrice(calculateTotal())}
                     </div>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, LogOut, Shield, Globe } from 'lucide-react';
+import { Menu, X, LogOut, Shield, Globe, Coins } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 import { auth } from '@/firebase';
@@ -8,6 +8,7 @@ import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from "@/lib/utils.ts"
+import { useCurrency } from '@/context/CurrencyContext';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +21,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const { t, i18n } = useTranslation();
+  const { currency, setCurrency } = useCurrency();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -102,6 +104,24 @@ export default function Navbar() {
           
           <div className="h-4 w-[1px] bg-luxury-black/10 mx-2" />
 
+          {/* Currency Switcher */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "text-luxury-black/70 hover:text-gold cursor-pointer")}>
+              <Coins className="w-4 h-4 mr-2" />
+              <span className="uppercase">{currency}</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white border-gold/10">
+              <DropdownMenuItem onClick={() => setCurrency('TND')} className="cursor-pointer hover:bg-luxury-cream">
+                Tunisian Dinar (TND)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setCurrency('EUR')} className="cursor-pointer hover:bg-luxury-cream">
+                Euro (€)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="h-4 w-[1px] bg-luxury-black/10 mx-2" />
+
           {/* Language Switcher */}
           <DropdownMenu>
             <DropdownMenuTrigger className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "text-luxury-black/70 hover:text-gold cursor-pointer")}>
@@ -137,6 +157,15 @@ export default function Navbar() {
 
         {/* Mobile Toggle */}
         <div className="flex items-center gap-4 md:hidden">
+           <DropdownMenu>
+            <DropdownMenuTrigger className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "text-luxury-black/70 cursor-pointer")}>
+              <Coins className="w-5 h-5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white">
+              <DropdownMenuItem onClick={() => setCurrency('TND')}>Tunisian Dinar (TND)</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setCurrency('EUR')}>Euro (€)</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
            <DropdownMenu>
             <DropdownMenuTrigger className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "text-luxury-black/70 cursor-pointer")}>
               <Globe className="w-5 h-5" />

@@ -1,19 +1,39 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FEATURED_ROOMS } from '@/components/home/FeaturedRooms';
 import { Button } from '@/components/ui/Button';
 import { Star, Users, Maximize, ArrowLeft, Check, Wifi, Coffee, Tv, Wind } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BookingModal from '@/components/booking/BookingModal';
 import { useTranslation } from 'react-i18next';
+import { useCurrency } from '@/context/CurrencyContext';
 
 export default function RoomDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { formatPrice } = useCurrency();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  const room = FEATURED_ROOMS.find(r => r.id === id);
+  const [room, setRoom] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchRoom();
+  }, [id]);
+
+  const fetchRoom = async () => {
+    try {
+      const res = await fetch(`/api/rooms`);
+      const rooms = await res.json();
+      const foundRoom = rooms.find((r: any) => r._id === id);
+      setRoom(foundRoom);
+    } catch (error) {
+      console.error('Error fetching room:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return null;
 
   if (!room) {
     return (
@@ -47,16 +67,16 @@ export default function RoomDetails() {
           >
             <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
               <img 
-                src={room.image} 
+                src={room.images?.[0] || 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=1000'} 
                 alt={room.name} 
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
               />
             </div>
             <div className="grid grid-cols-3 gap-4">
-              {[1, 2, 3].map((i) => (
+              {room.images?.slice(0, 3).map((img: string, i: number) => (
                 <div key={i} className="aspect-square rounded-2xl overflow-hidden shadow-md opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
-                  <img src={room.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  <img src={img} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                 </div>
               ))}
             </div>
@@ -95,7 +115,7 @@ export default function RoomDetails() {
                 </div>
                 <div>
                   <p className="text-[10px] uppercase tracking-widest font-bold text-luxury-black/40">Room Size</p>
-                  <p className="text-luxury-black font-medium">{room.size}</p>
+                  <p className="text-luxury-black font-medium">{room.size || '45m²'}</p>
                 </div>
               </div>
             </div>
@@ -108,7 +128,7 @@ export default function RoomDetails() {
                   { icon: Coffee, label: 'Coffee Maker' },
                   { icon: Tv, label: 'Smart TV' },
                   { icon: Wind, label: 'Air Conditioning' },
-                  ...room.amenities.map(a => ({ icon: Check, label: a }))
+                  ...(room.amenities?.map((a: string) => ({ icon: Check, label: a })) || [])
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3 text-luxury-black/70">
                     <item.icon className="w-4 h-4 text-gold" />
@@ -121,7 +141,7 @@ export default function RoomDetails() {
             <div className="pt-8 flex items-center justify-between gap-8">
               <div>
                 <p className="text-[10px] uppercase tracking-widest font-bold text-luxury-black/40 mb-1">Price per night</p>
-                <p className="text-4xl font-bold text-luxury-black">{room.price} <span className="text-lg font-normal text-luxury-black/40">{t('rooms.tnd')}</span></p>
+                <p className="text-4xl font-bold text-luxury-black">{formatPrice(room.price)}</p>
               </div>
               <Button 
                 onClick={() => setIsModalOpen(true)}

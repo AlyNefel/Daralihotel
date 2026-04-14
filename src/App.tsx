@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
+import { CurrencyProvider } from './context/CurrencyContext';
 import Navbar from './components/layout/Navbar';
 import Chatbot from './components/chat/Chatbot';
 import AdminDashboard from './components/admin/AdminDashboard';
@@ -54,7 +55,9 @@ export default function App() {
   return (
     <Router>
       <AuthProvider>
-        <AppContent />
+        <CurrencyProvider>
+          <AppContent />
+        </CurrencyProvider>
       </AuthProvider>
     </Router>
   );
