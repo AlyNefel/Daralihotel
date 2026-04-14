@@ -25,6 +25,13 @@ export default function Chatbot() {
     }
   }, [messages, isTyping]);
 
+  // Pre-load voices
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.getVoices();
+    }
+  }, []);
+
   const speak = (text: string) => {
     if (mute || !window.speechSynthesis) return;
     
@@ -32,14 +39,31 @@ export default function Chatbot() {
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB'; // Force English (British)
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
     
-    // Try to find a nice premium voice if available
+    // Try to find an English male voice (preferably British for the accent)
     const voices = window.speechSynthesis.getVoices();
-    const premiumVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Premium'));
-    if (premiumVoice) utterance.voice = premiumVoice;
+    
+    // Log voices for debugging in browser console if needed
+    // console.log('Available voices:', voices.map(v => `${v.name} (${v.lang})`));
+
+    const preferredVoice = 
+      voices.find(v => v.lang === 'en-GB' && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('guy') || v.name.toLowerCase().includes('daniel'))) ||
+      voices.find(v => v.lang.startsWith('en') && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('guy'))) ||
+      voices.find(v => v.lang === 'en-GB') ||
+      voices.find(v => v.lang.startsWith('en'));
+    
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+    
+    // Adjust pitch and rate for a more masculine, sophisticated tone
+    // Lower pitch usually sounds more male
+    utterance.pitch = 0.85; 
+    utterance.rate = 0.9;
     
     window.speechSynthesis.speak(utterance);
   };
@@ -53,14 +77,16 @@ export default function Chatbot() {
     setIsTyping(true);
 
     try {
-      const systemInstruction = `You are the AI assistant for "Dar Ali", a luxury guest house (Maison d'hôtes) in Djerba, Tunisia. 
-      Dar Ali is a traditional Djerbian house (Houch) offering a unique blend of authentic architecture and modern luxury.
+      const systemInstruction = `You are "Arthur", the sophisticated English head concierge for "Dar Ali", a luxury guest house (Maison d'hôtes) located in the heart of the Medina of Tunis, Tunisia. 
+      Dar Ali is a stunningly restored traditional residence, offering an authentic Tunisian experience with refined luxury.
       
       Context: We have Single, Double, Suite, and Deluxe rooms. Prices start from 200 TND. 
-      Amenities: Large outdoor swimming pool, traditional Tunisian breakfast, lush gardens, proximity to Djerba's beautiful beaches, and personalized concierge service.
-      Location: Djerba, Tunisia.
+      Amenities: Traditional Tunisian breakfast served in the patio, rooftop terrace with views of the Medina and the Zitouna Mosque, personalized concierge service, and authentic architecture.
+      Location: Medina of Tunis, Tunisia.
       
-      Be elegant, warm, and professional. Provide information about rooms, amenities, and local Djerba attractions. Keep responses concise and sophisticated.`;
+      Persona: You speak with the elegance, wit, and impeccable manners of a high-end British butler. You are warm, professional, and deeply knowledgeable about the Medina, the Zitouna Mosque, and the local souks.
+      
+      Be elegant, warm, and professional. Provide information about rooms, amenities, and local attractions in the Tunis Medina. Keep responses concise and sophisticated.`;
 
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",

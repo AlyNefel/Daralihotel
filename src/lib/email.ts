@@ -40,7 +40,7 @@ export const sendBookingConfirmation = async (booking: any, room: any) => {
           </div>
         </div>
         <div style="margin-top: 30px; text-align: center; color: #8e8e8e; font-size: 12px;">
-          <p>Dar Ali Luxury Hotel & Spa<br>Tunisia</p>
+          <p>Dar Ali Luxury Hotel & Spa<br>Medina of Tunis, Tunisia</p>
         </div>
       </div>
     `,
