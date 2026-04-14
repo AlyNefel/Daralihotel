@@ -12,7 +12,6 @@ import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { cn } from "@/lib/utils.ts"
-import { useCurrency } from '@/context/CurrencyContext';
 
 interface BookingModalProps {
   room: {
@@ -27,7 +26,6 @@ interface BookingModalProps {
 export default function BookingModal({ room, isOpen, onClose }: BookingModalProps) {
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { formatPrice } = useCurrency();
   const [date, setDate] = useState<{ from: Date | undefined; to: Date | undefined }>({
     from: undefined,
     to: undefined
@@ -228,7 +226,7 @@ export default function BookingModal({ room, isOpen, onClose }: BookingModalProp
                   <div className="space-y-2">
                     <Label className="text-xs uppercase tracking-widest font-bold">{t('booking.totalPrice')}</Label>
                     <div className="h-12 flex items-center px-4 bg-luxury-black text-white rounded-xl font-bold">
-                      {formatPrice(calculateTotal())}
+                      {calculateTotal()} TND
                     </div>
                   </div>
                 </div>

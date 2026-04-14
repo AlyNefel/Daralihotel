@@ -11,6 +11,7 @@ import {
   X,
   Clock,
   ChevronRight,
+  ChevronLeft,
   LogOut,
   Settings,
   Search,
@@ -24,12 +25,12 @@ import { Input } from '@/components/ui/Input';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useCurrency } from '@/context/CurrencyContext';
 
 type Tab = 'dashboard' | 'rooms' | 'bookings' | 'clients';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [bookings, setBookings] = useState<any[]>([]);
   const [rooms, setRooms] = useState<any[]>([]);
   const [clients, setClients] = useState<any[]>([]);
@@ -41,7 +42,6 @@ export default function AdminDashboard() {
     occupancy: 0
   });
   const { t } = useTranslation();
-  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -104,14 +104,19 @@ export default function AdminDashboard() {
         activeTab === id 
           ? 'bg-gold text-white shadow-lg shadow-gold/20' 
           : 'text-luxury-black/60 hover:bg-luxury-cream hover:text-luxury-black'
-      }`}
+      } ${isSidebarCollapsed ? 'justify-center px-2' : ''}`}
+      title={isSidebarCollapsed ? label : ''}
     >
-      <Icon className="w-5 h-5" />
-      <span className="font-medium">{label}</span>
-      {activeTab === id && (
-        <motion.div layoutId="active-pill" className="ml-auto">
-          <ChevronRight className="w-4 h-4" />
-        </motion.div>
+      <Icon className="w-5 h-5 shrink-0" />
+      {!isSidebarCollapsed && (
+        <>
+          <span className="font-medium whitespace-nowrap">{label}</span>
+          {activeTab === id && (
+            <motion.div layoutId="active-pill" className="ml-auto">
+              <ChevronRight className="w-4 h-4" />
+            </motion.div>
+          )}
+        </>
       )}
     </button>
   );
@@ -119,12 +124,22 @@ export default function AdminDashboard() {
   return (
     <div className="flex min-h-screen bg-[#F8F7F4]">
       {/* Sidebar */}
-      <aside className="w-72 bg-white border-r border-luxury-black/5 p-6 flex flex-col fixed h-full z-30">
-        <div className="mb-10 px-4">
-          <span className="text-2xl font-serif font-bold tracking-tighter text-luxury-black">
-            DAR <span className="text-gold">ALI</span>
-          </span>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-luxury-black/40 mt-1 font-bold">Management</p>
+      <aside className={`${isSidebarCollapsed ? 'w-20' : 'w-72'} bg-white border-r border-luxury-black/5 p-4 flex flex-col fixed h-full z-30 transition-all duration-300 ${isSidebarCollapsed ? 'md:w-20' : 'md:w-72'}`}>
+        <div className={`mb-10 px-2 flex items-center ${isSidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
+          {!isSidebarCollapsed && (
+            <div>
+              <span className="text-2xl font-serif font-bold tracking-tighter text-luxury-black">
+                DAR <span className="text-gold">ALI</span>
+              </span>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-luxury-black/40 mt-1 font-bold">Management</p>
+            </div>
+          )}
+          <button 
+            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            className="p-2 hover:bg-luxury-cream rounded-lg transition-colors text-luxury-black/40"
+          >
+            {isSidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          </button>
         </div>
 
         <nav className="space-y-2 flex-1">
@@ -135,19 +150,19 @@ export default function AdminDashboard() {
         </nav>
 
         <div className="pt-6 border-t border-luxury-black/5 space-y-2">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-luxury-black/60 hover:bg-luxury-cream transition-colors">
-            <Settings className="w-5 h-5" />
-            <span className="font-medium">Settings</span>
+          <button className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-luxury-black/60 hover:bg-luxury-cream transition-colors ${isSidebarCollapsed ? 'justify-center px-2' : ''}`} title={isSidebarCollapsed ? 'Settings' : ''}>
+            <Settings className="w-5 h-5 shrink-0" />
+            {!isSidebarCollapsed && <span className="font-medium">Settings</span>}
           </button>
-          <button onClick={() => navigate('/')} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
-            <LogOut className="w-5 h-5" />
-            <span className="font-medium">Exit Admin</span>
+          <button onClick={() => navigate('/')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors ${isSidebarCollapsed ? 'justify-center px-2' : ''}`} title={isSidebarCollapsed ? 'Exit Admin' : ''}>
+            <LogOut className="w-5 h-5 shrink-0" />
+            {!isSidebarCollapsed && <span className="font-medium">Exit Admin</span>}
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-72 p-10">
+      <main className={`flex-1 ${isSidebarCollapsed ? 'ml-20' : 'ml-20 md:ml-72'} p-4 md:p-10 transition-all duration-300`}>
         <header className="flex justify-between items-center mb-10">
           <div>
             <h1 className="text-3xl font-serif text-luxury-black capitalize">{activeTab}</h1>
@@ -177,7 +192,7 @@ export default function AdminDashboard() {
               {/* Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 {[
-                  { label: 'Total Revenue', value: formatPrice(stats.revenue), icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-50' },
+                  { label: 'Total Revenue', value: `${stats.revenue} TND`, icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-50' },
                   { label: 'Bookings', value: stats.totalBookings, icon: CalendarCheck, color: 'text-blue-600', bg: 'bg-blue-50' },
                   { label: 'Pending', value: stats.pending, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50' },
                   { label: 'Occupancy', value: `${stats.occupancy}%`, icon: BedDouble, color: 'text-purple-600', bg: 'bg-purple-50' },
@@ -231,7 +246,7 @@ export default function AdminDashboard() {
                               </div>
                             </td>
                             <td className="px-8 py-5 font-bold text-luxury-black">
-                              {formatPrice(booking.totalPrice)}
+                              {booking.totalPrice} TND
                             </td>
                             <td className="px-8 py-5">
                               <Badge className={`rounded-full px-3 py-1 text-[10px] uppercase tracking-widest ${
@@ -335,7 +350,7 @@ export default function AdminDashboard() {
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="font-serif text-xl text-luxury-black">{room.name}</h3>
-                      <p className="text-gold font-bold">{formatPrice(room.price)}<span className="text-[10px] text-luxury-black/40 font-normal">/night</span></p>
+                      <p className="text-gold font-bold">{room.price} TND<span className="text-[10px] text-luxury-black/40 font-normal">/night</span></p>
                     </div>
                     <p className="text-sm text-luxury-black/60 line-clamp-2 mb-6">{room.description}</p>
                     <div className="flex justify-between items-center">

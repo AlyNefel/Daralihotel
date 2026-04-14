@@ -6,7 +6,6 @@ import { Star, Users, Maximize, Info } from 'lucide-react';
 import BookingModal from '../booking/BookingModal';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useCurrency } from '@/context/CurrencyContext';
 
 export default function FeaturedRooms() {
   const [rooms, setRooms] = useState<any[]>([]);
@@ -14,7 +13,6 @@ export default function FeaturedRooms() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
-  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -91,8 +89,8 @@ export default function FeaturedRooms() {
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-2xl font-serif text-luxury-black">{room.name}</h3>
                     <div className="text-right">
-                      <span className="text-2xl font-bold text-luxury-black">{formatPrice(room.price)}</span>
-                      <span className="text-xs text-luxury-black/50 block uppercase tracking-tighter">/ {t('rooms.night')}</span>
+                      <span className="text-2xl font-bold text-luxury-black">{room.price}</span>
+                      <span className="text-xs text-luxury-black/50 block uppercase tracking-tighter">TND / {t('rooms.night')}</span>
                     </div>
                   </div>
 

@@ -5,13 +5,11 @@ import { Star, Users, Maximize, ArrowLeft, Check, Wifi, Coffee, Tv, Wind } from 
 import { useState, useEffect } from 'react';
 import BookingModal from '@/components/booking/BookingModal';
 import { useTranslation } from 'react-i18next';
-import { useCurrency } from '@/context/CurrencyContext';
 
 export default function RoomDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { formatPrice } = useCurrency();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [room, setRoom] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -141,7 +139,7 @@ export default function RoomDetails() {
             <div className="pt-8 flex items-center justify-between gap-8">
               <div>
                 <p className="text-[10px] uppercase tracking-widest font-bold text-luxury-black/40 mb-1">Price per night</p>
-                <p className="text-4xl font-bold text-luxury-black">{formatPrice(room.price)}</p>
+                <p className="text-4xl font-bold text-luxury-black">{room.price} <span className="text-lg font-normal text-luxury-black/40">TND</span></p>
               </div>
               <Button 
                 onClick={() => setIsModalOpen(true)}

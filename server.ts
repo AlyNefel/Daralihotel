@@ -26,7 +26,7 @@ async function startServer() {
       {
         name: 'Royal Suite',
         type: 'suite',
-        price: 850,
+        price: 750,
         images: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=1000'],
         capacity: 2,
         amenities: ['Private Pool', 'Ocean View', 'Butler Service'],
@@ -46,7 +46,7 @@ async function startServer() {
       {
         name: 'Executive Double',
         type: 'standard',
-        price: 320,
+        price: 280,
         images: ['https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1000'],
         capacity: 2,
         amenities: ['Work Desk', 'City View', 'Mini Bar'],
