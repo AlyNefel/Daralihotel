@@ -39,21 +39,21 @@ export default function Chatbot() {
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-GB'; // Force English (British)
+    utterance.lang = 'en-US'; // Force American English
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
     
-    // Try to find an English male voice (preferably British for the accent)
+    // Try to find an American English male voice
     const voices = window.speechSynthesis.getVoices();
     
     // Log voices for debugging in browser console if needed
     // console.log('Available voices:', voices.map(v => `${v.name} (${v.lang})`));
 
     const preferredVoice = 
-      voices.find(v => v.lang === 'en-GB' && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('guy') || v.name.toLowerCase().includes('daniel'))) ||
+      voices.find(v => v.lang === 'en-US' && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('guy') || v.name.toLowerCase().includes('david'))) ||
       voices.find(v => v.lang.startsWith('en') && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('guy'))) ||
-      voices.find(v => v.lang === 'en-GB') ||
+      voices.find(v => v.lang === 'en-US') ||
       voices.find(v => v.lang.startsWith('en'));
     
     if (preferredVoice) {
@@ -77,14 +77,14 @@ export default function Chatbot() {
     setIsTyping(true);
 
     try {
-      const systemInstruction = `You are "Arthur", the sophisticated English head concierge for "Dar Ali", a luxury guest house (Maison d'hôtes) located in the heart of the Medina of Tunis, Tunisia. 
+      const systemInstruction = `You are "David", the sophisticated American head concierge for "Dar Ali", a luxury guest house (Maison d'hôtes) located in the heart of the Medina of Tunis, Tunisia. 
       Dar Ali is a stunningly restored traditional residence, offering an authentic Tunisian experience with refined luxury.
       
       Context: We have Single, Double, Suite, and Deluxe rooms. Prices start from 200 TND. 
       Amenities: Traditional Tunisian breakfast served in the patio, rooftop terrace with views of the Medina and the Zitouna Mosque, personalized concierge service, and authentic architecture.
       Location: Medina of Tunis, Tunisia.
       
-      Persona: You speak with the elegance, wit, and impeccable manners of a high-end British butler. You are warm, professional, and deeply knowledgeable about the Medina, the Zitouna Mosque, and the local souks.
+      Persona: You speak with the warmth, professionalism, and polished charm of a high-end American hotel manager. You are friendly yet professional, and deeply knowledgeable about the Medina, the Zitouna Mosque, and the local souks.
       
       Be elegant, warm, and professional. Provide information about rooms, amenities, and local attractions in the Tunis Medina. Keep responses concise and sophisticated.`;
 
